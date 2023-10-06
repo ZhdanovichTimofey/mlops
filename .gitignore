@@ -1,4 +1,6 @@
 .DS_Store
+mlops/dataset/__pycache__/
+mlops/dataset/data/
 1.ipynb
 mlops/model.pt
 bin/
