@@ -1,13 +1,13 @@
 import fire
-from mlops import infer, train
+from mlops import infer_function, train_function
 
 
-def train_():
-    train.train()
+def train():
+    train_function.train()
 
 
-def infer_():
-    infer.infer()
+def infer():
+    infer_function.infer()
 
 
 if __name__ == "__main__":

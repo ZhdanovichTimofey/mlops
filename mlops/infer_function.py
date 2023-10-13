@@ -3,7 +3,7 @@ import pandas as pd
 import torch
 from sklearn.metrics import f1_score
 
-from .dataset.dataset import DataLoader
+from .dataset import DataLoader
 from .model import SimpleConvNet
 
 

@@ -8,7 +8,7 @@ from torchvision import transforms
 class DataLoader:
     # Путь для папки с данными
     DATA_PATH = os.path.dirname(os.path.abspath(__name__))
-    DATA_PATH = os.path.join(DATA_PATH, "dataset/data")
+    DATA_PATH = os.path.join(DATA_PATH, "data")
 
     # Папка со всеми фотографиями / папка с фотографиями для тренировки
     TRAIN_DIR = os.path.join(DATA_PATH, "train")

@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 
-from .dataset.dataset import DataLoader as data
+from .dataset import DataLoader as data
 from .model import SimpleConvNet
 
 

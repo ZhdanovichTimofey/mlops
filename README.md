@@ -1,4 +1,4 @@
-Решается задача классификации на датасете CIFAR10
+Решается задача классификации на датасете CIFAR10, в качестве метрики качества используется F1
 
-Для запуска цикла обучения: python commands.py train_
-Для запуска теста: python commands.py infer_
+Для запуска цикла обучения: python commands.py train
+Для запуска теста: python commands.py infer
