@@ -1,19 +1,23 @@
-if __name__ == "__main__":
-    import dataset.dataset as data
-    import model
-    import numpy as np
-    import pandas as pd
-    import torch
-    from sklearn.metrics import f1_score
+import numpy as np
+import pandas as pd
+import torch
+from sklearn.metrics import f1_score
 
+from .dataset.dataset import DataLoader
+from .model import SimpleConvNet
+
+
+def infer():
     device = "cpu"
+
+    data = DataLoader()
 
     val_f1 = 0
     val_for_f1_b = []
     val_for_f1_p = []
     y_pred = np.array([])
 
-    model = model.SimpleConvNet()
+    model = SimpleConvNet()
     model.load_state_dict(torch.load("model.pt"))
     model.eval()
 
