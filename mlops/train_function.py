@@ -5,13 +5,13 @@ from .dataset import DataLoader as data
 from .model import SimpleConvNet
 
 
-def train(num_epochs=10):
+def train(num_epochs, learning_rate, batch_size):
     device = "cpu"
     model = SimpleConvNet().to(device)
     criterion = nn.CrossEntropyLoss().to(device)
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
-    batch = data.train_batch_gen
+    batch = data(batch_size).train_batch_gen
 
     for epoch in range(num_epochs):
 

@@ -7,10 +7,10 @@ from .dataset import DataLoader
 from .model import SimpleConvNet
 
 
-def infer():
+def infer(batch_size):
     device = "cpu"
 
-    data = DataLoader()
+    data = DataLoader(batch_size)
 
     val_f1 = 0
     val_for_f1_b = []
