@@ -39,3 +39,7 @@ def infer(batch_size):
     print("val_f1", val_f1)
 
     pd.DataFrame(y_pred).to_csv("val_results.csv")
+
+
+if __name__ == "__main__":
+    infer()

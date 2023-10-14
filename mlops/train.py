@@ -40,3 +40,7 @@ def train(num_epochs, learning_rate, batch_size):
             optimizer.zero_grad()
 
     torch.save(model.state_dict(), "model.pt")
+
+
+if __name__ == "__main__":
+    train()
