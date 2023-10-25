@@ -7,7 +7,7 @@ from .dataset import DataLoader
 from .model import SimpleConvNet
 
 
-def infer(batch_size):
+def infer(batch_size, lr):
     device = "cpu"
 
     data = DataLoader(batch_size)
@@ -17,7 +17,7 @@ def infer(batch_size):
     val_for_f1_p = []
     y_pred = np.array([])
 
-    model = SimpleConvNet()
+    model = SimpleConvNet(lr)
     model.load_state_dict(torch.load("model.pt"))
     model.eval()
 

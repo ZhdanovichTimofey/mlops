@@ -1,9 +1,14 @@
+import lightning.pytorch as pl
+import torch
 from torch import nn
 
 
-class SimpleConvNet(nn.Module):
-    def __init__(self):
+class SimpleConvNet(pl.LightningModule):
+    def __init__(self, lr: float):
         super(SimpleConvNet, self).__init__()
+
+        self.lr = lr
+        self.loss_fn = nn.CrossEntropyLoss()
 
         self.conv1 = nn.Conv2d(3, 32, 3)
         self.mp1 = nn.MaxPool2d(2)
@@ -34,3 +39,32 @@ class SimpleConvNet(nn.Module):
         out = self.relu3(self.droupout3(self.fc3(out)))
         out = self.fc4(out)
         return out
+
+    def training_step(self, batch: any, batch_idx: int, dataloader_idx=0):
+        X_batch, y_batch = batch
+        y_preds = self(X_batch)
+        loss = self.loss_fn(y_preds, y_batch)
+        self.log("train_loss", loss, on_step=True, on_epoch=False, prog_bar=True)
+        return {"loss": loss}
+
+    def validation_step(self, batch: any, batch_idx: int):
+        X_batch, y_batch = batch
+        y_preds = self(X_batch)
+        loss = self.loss_fn(y_preds, y_batch)
+        self.log("val_loss", loss, on_step=True, on_epoch=True, prog_bar=False)
+        return {"val_loss": loss}
+
+    def test_step(self, batch: any, batch_idx: int, dataloader_idx: int = 0):
+        pass
+
+    def predict_step(self, batch: any, batch_idx: int) -> any:
+        pass
+
+    def configure_optimizers(self) -> any:
+        param_optimizer = list(self.parameters())
+        optimizer = torch.optim.Adam(param_optimizer, lr=self.lr)
+        return [optimizer]
+
+    def on_before_optimizer_step(self, optimizer):
+        self.log_dict(pl.utilities.grad_norm(self, norm_type=2))
+        super().on_before_optimizer_step(optimizer)
