@@ -1,12 +1,13 @@
 import lightning.pytorch as pl
 import torch
 from torch import nn
+from torcheval.metrics import MulticlassF1Score
 
 
 class SimpleConvNet(pl.LightningModule):
     def __init__(self, lr: float):
         super(SimpleConvNet, self).__init__()
-
+        self.save_hyperparameters()
         self.lr = lr
         self.loss_fn = nn.CrossEntropyLoss()
 
@@ -55,7 +56,16 @@ class SimpleConvNet(pl.LightningModule):
         return {"val_loss": loss}
 
     def test_step(self, batch: any, batch_idx: int, dataloader_idx: int = 0):
-        pass
+        X_batch, y_batch = batch
+        y_preds = self(X_batch)
+        loss = self.loss_fn(y_preds, y_batch)
+        f1_metric = MulticlassF1Score(num_classes=10, average="macro")
+        f1_metric.update(y_preds, y_batch)
+        self.log("test_loss", loss, on_step=True, on_epoch=True, prog_bar=False)
+        self.log(
+            "test_f1", f1_metric.compute(), on_step=True, on_epoch=True, prog_bar=False
+        )
+        return {"test_loss": loss, "test_f1": f1_metric.compute()}
 
     def predict_step(self, batch: any, batch_idx: int) -> any:
         pass

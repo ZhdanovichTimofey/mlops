@@ -29,10 +29,14 @@ class DataLoader:
         self.batch_size = batch_size
 
         self.train_batch_gen = torch.utils.data.DataLoader(
-            self.train_dataset, batch_size=self.batch_size, shuffle=True
+            self.train_dataset,
+            batch_size=self.batch_size,
+            shuffle=True,
         )
         self.test_batch_gen = torch.utils.data.DataLoader(
-            self.test_dataset, batch_size=self.batch_size, shuffle=False
+            self.test_dataset,
+            batch_size=self.batch_size,
+            shuffle=False,
         )
 
 
@@ -54,6 +58,9 @@ class MyDataModule(pl.LightningDataModule):
         return self.Loader.train_batch_gen
 
     def val_dataloader(self) -> torch.utils.data.DataLoader:
+        return self.Loader.test_batch_gen
+
+    def test_dataloader(self) -> torch.utils.data.DataLoader:
         return self.Loader.test_batch_gen
 
     def teardown(self, stage: str) -> None:
