@@ -1,7 +1,7 @@
 import lightning.pytorch as pl
 import torch
+import torcheval.metrics as metrics
 from torch import nn
-from torcheval.metrics import MulticlassF1Score
 
 
 class SimpleConvNet(pl.LightningModule):
@@ -53,19 +53,75 @@ class SimpleConvNet(pl.LightningModule):
         y_preds = self(X_batch)
         loss = self.loss_fn(y_preds, y_batch)
         self.log("val_loss", loss, on_step=True, on_epoch=True, prog_bar=False)
-        return {"val_loss": loss}
+
+        f1_metric = metrics.MulticlassF1Score(num_classes=10, average="macro")
+        f1_metric.update(y_preds, y_batch)
+        self.log(
+            "val_f1", f1_metric.compute(), on_step=True, on_epoch=True, prog_bar=False
+        )
+
+        accuracy = metrics.MulticlassAccuracy(num_classes=10, average="macro")
+        accuracy.update(y_preds, y_batch)
+        self.log(
+            "val_accuracy",
+            accuracy.compute(),
+            on_step=True,
+            on_epoch=True,
+            prog_bar=False,
+        )
+
+        precision = metrics.MulticlassPrecision(num_classes=10, average="macro")
+        precision.update(y_preds, y_batch)
+        self.log(
+            "val_precision",
+            precision.compute(),
+            on_step=True,
+            on_epoch=True,
+            prog_bar=False,
+        )
+        return {
+            "val_loss": loss,
+            "val_f1": f1_metric.compute(),
+            "val_accuracy": accuracy.compute(),
+            "val_precision": precision.compute(),
+        }
 
     def test_step(self, batch: any, batch_idx: int, dataloader_idx: int = 0):
         X_batch, y_batch = batch
         y_preds = self(X_batch)
         loss = self.loss_fn(y_preds, y_batch)
-        f1_metric = MulticlassF1Score(num_classes=10, average="macro")
+        f1_metric = metrics.MulticlassF1Score(num_classes=10, average="macro")
         f1_metric.update(y_preds, y_batch)
         self.log("test_loss", loss, on_step=True, on_epoch=True, prog_bar=False)
         self.log(
             "test_f1", f1_metric.compute(), on_step=True, on_epoch=True, prog_bar=False
         )
-        return {"test_loss": loss, "test_f1": f1_metric.compute()}
+
+        accuracy = metrics.MulticlassAccuracy(num_classes=10, average="macro")
+        accuracy.update(y_preds, y_batch)
+        self.log(
+            "test_accuracy",
+            accuracy.compute(),
+            on_step=True,
+            on_epoch=True,
+            prog_bar=False,
+        )
+
+        precision = metrics.MulticlassPrecision(num_classes=10, average="macro")
+        precision.update(y_preds, y_batch)
+        self.log(
+            "test_precision",
+            precision.compute(),
+            on_step=True,
+            on_epoch=True,
+            prog_bar=False,
+        )
+        return {
+            "test_loss": loss,
+            "test_f1": f1_metric.compute(),
+            "test_accuracy": accuracy.compute(),
+            "test_precision": precision.compute(),
+        }
 
     def predict_step(self, batch: any, batch_idx: int) -> any:
         pass

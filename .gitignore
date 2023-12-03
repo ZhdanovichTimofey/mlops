@@ -1,3 +1,8 @@
+127.0.0.1:8080/
+131177759167805254/
+708460851767405178/
+mlartifacts/
+lightning_logs/
 saved_model/
 mlruns/
 .logs
