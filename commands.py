@@ -4,7 +4,9 @@ import git
 import hydra
 import lightning.pytorch as pl
 import mlflow
+import onnx
 import torch
+from mlflow.models import infer_signature
 from mlops import dataset
 from mlops.model import SimpleConvNet
 from omegaconf import DictConfig
@@ -39,7 +41,33 @@ def train(cfg: DictConfig, SAVE_PATH):
 
     trainer.fit(mymodel, datamodule=dm)
 
+    imgs = [torch.zeros(1, 3, 32, 32), torch.ones(1, 3, 32, 32)]
+    print(mymodel(imgs[0]))
+    print(mymodel(imgs[1]))
+
     trainer.save_checkpoint(SAVE_PATH)
+
+    X = torch.zeros((2, 3, 32, 32), dtype=torch.float32)
+
+    torch.onnx.export(
+        mymodel,
+        X,
+        "model.onnx",
+        input_names=["INPUT"],
+        output_names=["OUTPUT"],
+        dynamic_axes={
+            "INPUT": {0: "BATCH_SIZE"},
+            "OUTPUT": {0: "BATCH_SIZE"},
+        },
+    )
+    onnx_model = onnx.load_model("model.onnx")
+    signature = infer_signature(X.numpy(), mymodel(X).detach().numpy())
+    mlflow.onnx.log_model(
+        onnx_model=onnx_model,
+        artifact_path="onnx-model",
+        signature=signature,
+        registered_model_name="simple-onnx-model",
+    )
 
 
 def infer(cfg: DictConfig, SAVE_PATH):

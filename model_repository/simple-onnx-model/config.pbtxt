@@ -1,0 +1,28 @@
+name: "simple-onnx-model"
+platform: "onnxruntime_onnx"
+max_batch_size: 256
+
+input [
+    {
+        name: "INPUT"
+        data_type: TYPE_FP32
+        dims: [ 3, 32, 32 ]
+    }
+]
+
+output [
+    {
+        name: "OUTPUT"
+        data_type: TYPE_FP32
+        dims: [ 10 ]
+    }
+]
+
+instance_group [
+    {
+        count: 4
+        kind: KIND_CPU
+    }
+]
+
+dynamic_batching: { max_queue_delay_microseconds: 500 }

@@ -7,4 +7,4 @@ log_every_n_steps: 1
 check_val_every_n_epoch: 1
 mlflow:
     server_uri: "http://127.0.0.1:8080"
-    experiment_name: "train_5"
+    experiment_name: "train_1"

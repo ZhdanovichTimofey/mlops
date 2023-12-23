@@ -19,6 +19,8 @@ torcheval = "^0.0.7"
 dvc = "^3.30.3"
 gitpython = "^3.1.40"
 onnx = "^1.15.0"
+onnxruntime = "^1.16.3"
+tritonclient = "^2.41.0"
 
 [tool.poetry.group.dev.dependencies]
 dvc-gdrive = "^2.20.0"

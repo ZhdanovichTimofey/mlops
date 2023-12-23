@@ -1,3 +1,7 @@
+.idea/
+139043138610192161/
+LICENSE.txt
+mymodel.onnx
 127.0.0.1:8080/
 131177759167805254/
 708460851767405178/
@@ -190,3 +194,4 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+/model_repository/simple-onnx-model/1/model.onnx
